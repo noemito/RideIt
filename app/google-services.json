@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "488473927869",
+    "project_id": "rideit-6c99c",
+    "storage_bucket": "rideit-6c99c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488473927869:android:b248be1002bfb5edeb97d4",
+        "android_client_info": {
+          "package_name": "com.example.rideit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488473927869-qig8oe7mtoqkl0mbbqgtuteb769iipmq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBndg5K-woqZKSriIHMMS0lc2ezlmvOhLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "488473927869-qig8oe7mtoqkl0mbbqgtuteb769iipmq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

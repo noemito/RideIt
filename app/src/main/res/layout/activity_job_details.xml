@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_job_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".JobDetailsActivity"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/user_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+
+        android:text="Noemito John Lacanaria"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="684dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="Tagoloan" />
+
+        <TextView
+            android:id="@+id/job_full_description"
+            android:layout_width="match_parent"
+            android:layout_height="440dp"
+            android:paddingLeft="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:text="description"
+            android:textSize="25sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="Location: "
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/job_full_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="Zone-9, Sihayon Sta. Cruz, Tagoloan Misamis Oriental"
+            android:textSize="20dp"
+            android:textStyle="italic|bold" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20sp"
+            android:text="View Map" />
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20sp"
+            android:text="Accept Job" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+</layout>
