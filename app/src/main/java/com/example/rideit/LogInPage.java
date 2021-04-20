@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -19,23 +20,32 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class LogInPage extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser mUser;
+    FirebaseDatabase database;
+    Users databaseUser;
     ActivityLogginPageBinding mPageBinding;
     EditText email, password;
     Button signIn, signUp;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(false);
         mPageBinding = ActivityLogginPageBinding.inflate(getLayoutInflater());
         setContentView(mPageBinding.getRoot());
         // setting up firebase
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();
         // user information
         email = mPageBinding.userEmail;
         password = mPageBinding.userPassword;
@@ -89,7 +99,7 @@ public class LogInPage extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     // Redirecting to Main page!
                     startActivity(intent);
-                    finish();
+
                 }else{
                     Toast.makeText(getApplicationContext(), "You are not registered yet!", Toast.LENGTH_LONG).show();
                     //TODO maybe? Redirecting the user to Register Page??
@@ -98,30 +108,41 @@ public class LogInPage extends AppCompatActivity {
             }
         });
     }
+
+
     @Override
     protected void onStart() {
         super.onStart();
-        if (hasUser()){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
+
+        if(mUser != null) {
+            String userID = mUser.getUid().toString();
+            Log.d("LoginPage", "Current Userid:" + userID);
+
+            database.getReference("User").child(mUser.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot != null){
+                       databaseUser = snapshot.getValue(Users.class);
+                       if (databaseUser == null){
+                           Intent intentRegisterPage = new Intent(getApplicationContext(), RegisterDetailsPage.class);
+                           startActivity(intentRegisterPage);
+                           finish();
+                       }
+                       else {
+                           Log.d("LoginPage", databaseUser.userId);
+                           Intent intentMainPage = new Intent(getApplicationContext(),MainActivity.class);
+                           startActivity(intentMainPage);
+                           finish();
+                       }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
-    }
-    final static String TAG = "MainPage";
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    public boolean hasUser(){
-        if (mUser != null)
-            return true;
-        return false;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 }

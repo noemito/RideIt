@@ -22,6 +22,7 @@ public class RegisterDetailsPage extends AppCompatActivity {
 
     ActivityRegisterDetailsPageBinding pageBinding;
     private FirebaseAuth mAuth;
+    FirebaseUser mUser;
     private FirebaseDatabase database;
     private EditText name, age, email;
     private Button btnSubmit;
@@ -35,7 +36,7 @@ public class RegisterDetailsPage extends AppCompatActivity {
         // Firebase Init
         mAuth = FirebaseAuth.getInstance();
         // get current user
-        FirebaseUser user = mAuth.getCurrentUser();
+        mUser = mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         // init widget
         name = pageBinding.name;
@@ -44,7 +45,7 @@ public class RegisterDetailsPage extends AppCompatActivity {
         btnSubmit = pageBinding.button;
 
         // check if the user is not null
-        if(user == null)
+        if(mUser == null)
         {
             Toast.makeText(RegisterDetailsPage.this, "You're not Login.",Toast.LENGTH_LONG).show();
             //TODO: Redirect user to Login page!
@@ -59,25 +60,27 @@ public class RegisterDetailsPage extends AppCompatActivity {
                 String _name = name.getText().toString().trim();
                 String _age = age.getText().toString().trim();
                 String _email = email.getText().toString().trim();
-                btnSubmit.setClickable(false);
-                Users user = new Users(_name,_age,_email);
 
-                database.getReference("User").child(mAuth.getCurrentUser().getUid()).setValue(user)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(RegisterDetailsPage.this, "Successfully Registereed Data Redirecting....",Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }else{
-                                    Toast.makeText(RegisterDetailsPage.this, "Can't Connect to database!",Toast.LENGTH_LONG).show();
-                                    btnSubmit.setClickable(true);
-                                }
-                            }
-                        });
+                Users user = new Users(mUser.getUid().toString(),_name,_age,_email);
+                CreateUserDetails(user);
+
             }
         });
+    }
+    public void CreateUserDetails(Users user){
+        database.getReference("User").child(mAuth.getCurrentUser().getUid()).setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(RegisterDetailsPage.this, "Successfully Registereed Data Redirecting....",Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            Toast.makeText(RegisterDetailsPage.this, "Can't Connect to database!",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 }

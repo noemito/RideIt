@@ -1,5 +1,7 @@
 package com.example.rideit;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.cardview.widget.CardView;
@@ -19,56 +21,103 @@ import android.widget.Toast;
 import com.example.rideit.databinding.ActivityJobDetailsBinding;
 import com.example.rideit.databinding.ActivityMainBinding;
 import com.google.android.gms.common.internal.Objects;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     final static String TAG = "MainPage";
-    ArrayList<Job> Jobs = new ArrayList<>();
+    ArrayList<Job> jobs;
     FirebaseAuth mAuth;
     FirebaseUser user;
-
+    FirebaseDatabase database;
+    RecyclerView mRecyclerView;
     private ActivityMainBinding mBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // List of job
+
+
+        jobs = new ArrayList<Job>();
 
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(mBinding.getRoot());
-
+        // Firebase
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
+        database = FirebaseDatabase.getInstance();
 
+        // UI
         Button btnLogout = mBinding.logOut;
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
+        Button btnCreateJob = mBinding.createJobBtn;
+
+        mRecyclerView = findViewById(R.id.recyclerView);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Job noemitoJob = new Job("Noemito John, Lacanaria", "Food Delivery", "Tagoloan Misamis Oriental");
-        Job sweetJob = new Job("Mercy Sweet, Suarin", "Food Delivery", "Bukidnon");
-
-        Jobs.add(noemitoJob);
-        Jobs.add(sweetJob);
-
-        JobAdapter jobAdapter = new JobAdapter(Jobs, MainActivity.this);
-        mRecyclerView.setAdapter(jobAdapter);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                user = mAuth.getCurrentUser();
-                Intent intent = new Intent(getApplicationContext(), LogInPage.class);
-                startActivity(intent);
+                SingOut();
             }
         });
-        Log.d(TAG, "OnCreate");
+        btnCreateJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentCreateJob = new Intent(getApplicationContext(), CreateJobPage.class);
+                startActivity(intentCreateJob);
+            }
+        });
+
+        database.getReference("Jobs").keepSynced(false);
+
+    }
+    public void GetJob(){
+        
+            database.getReference("Jobs").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                jobs.clear();
+                for(DataSnapshot dataSnapshots  : snapshot.getChildren()){
+                   Job  j  = dataSnapshots.getValue(Job.class);
+                   // check kong naa na sa atong data kong naa na dli na nako i add
+                    if(!jobs.contains(j)) {
+                        jobs.add(j);
+                    }
+                    Log.d("JobsListUser", "DATA: " + j.toString());
+                }
+                JobAdapter jobAdapter = new JobAdapter(jobs, MainActivity.this);
+                mRecyclerView.setAdapter(jobAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("JobsList", "Can't Connect database");
+            }
+        });
+    }
+    private void DisplayJobs(ArrayList<Job> j, MainActivity main){
+        JobAdapter jobAdapter = new JobAdapter(j, main);
+        mRecyclerView.setAdapter(jobAdapter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -80,31 +129,16 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+        GetJob();
+        Log.d("JobsList", "Size: " + String.valueOf(jobs.size()));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-
+    public void SingOut(){
+        mAuth.signOut();
+        user = mAuth.getCurrentUser();
+        Intent intent = new Intent(getApplicationContext(), LogInPage.class);
+        startActivity(intent);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
-        if (user == null){
-            Log.d(TAG, "onStop: No user!");
-        }else{
-            Log.d(TAG, "onStop: Have a User!");
-        }
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-
-    }
 }
