@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user;
     FirebaseDatabase database;
     RecyclerView mRecyclerView;
-    private ActivityMainBinding mBinding;
+    public ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

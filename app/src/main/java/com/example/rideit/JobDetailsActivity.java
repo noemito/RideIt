@@ -13,7 +13,7 @@ public class JobDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details);
-
+        //TODO add activity binding!!!!!
         Job j = (Job) getIntent().getSerializableExtra("Job_Details");
 
         TextView userText = findViewById(R.id.user_name_text);

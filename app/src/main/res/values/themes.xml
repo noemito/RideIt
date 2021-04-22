@@ -14,27 +14,5 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Cardview.Job" parent="CardView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginHorizontal">5dp</item>
-        <item name="android:layout_marginVertical">5dp</item>
-        <item name="cardBackgroundColor">@android:color/darker_gray</item>
-    </style>
-
-    <style name="Cardview.Job.Layout" parent="android:Widget">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginHorizontal">5dp</item>
-        <item name="android:layout_marginVertical">5dp</item>
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="Cardview.Job.UserText" parent="Widget.AppCompat.TextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 
 </resources>

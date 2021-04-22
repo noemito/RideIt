@@ -10,11 +10,6 @@ public class Job implements Serializable {
     private String jobDescription;
     private String userAddress;
 
-    public String getDestanation() {
-        return destanation;
-    }
-
-    private String destanation;
 
     public String getUserName() {
         return userName;

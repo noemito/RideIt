@@ -39,7 +39,6 @@ public class LogInPage extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(false);
         mPageBinding = ActivityLogginPageBinding.inflate(getLayoutInflater());
         setContentView(mPageBinding.getRoot());
         // setting up firebase
