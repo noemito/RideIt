@@ -3,28 +3,22 @@ package com.example.rideit;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.rideit.databinding.ActivityJobDetailsBinding;
+
 import com.example.rideit.databinding.ActivityMainBinding;
-import com.google.android.gms.common.internal.Objects;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -46,17 +40,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // List of job
-
-
         jobs = new ArrayList<Job>();
 
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
-
         setContentView(mBinding.getRoot());
+        //Toolbar
+        Toolbar toolbar = mBinding.toolbarMain;
+        setSupportActionBar(toolbar);
+
         // Firebase
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-
         database = FirebaseDatabase.getInstance();
 
         // UI
@@ -82,10 +76,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intentCreateJob);
             }
         });
-
-        database.getReference("Jobs").keepSynced(false);
-
     }
+
     public void GetJob(){
         
             database.getReference("Jobs").addValueEventListener(new ValueEventListener() {
@@ -110,15 +102,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void DisplayJobs(ArrayList<Job> j, MainActivity main){
-        JobAdapter jobAdapter = new JobAdapter(j, main);
-        mRecyclerView.setAdapter(jobAdapter);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Override
     protected void onStart() {
@@ -140,5 +123,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
 }
